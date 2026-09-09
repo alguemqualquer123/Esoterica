@@ -60,7 +60,16 @@ namespace EE::Network
                 // Remove connected client
                 case ix::WebSocketMessageType::Close:
                 {
-                    EE_LOG_MESSAGE( LogCategory::Network, "Websocket Server", "Client Closed Connection: %s", msg->closeInfo.reason.c_str() );
+                    // "Abnormal closure" ocorre quando cliente é morto (kill) sem handshake — normal durante testes
+                    // Só loga como warning se não for fechamento normal para reduzir spam no log
+                    if ( msg->closeInfo.reason == "Abnormal closure" )
+                    {
+                        EE_LOG_WARNING( LogCategory::Network, "Websocket Server", "Client Abnormal closure (kill/timeout) ID %llu", clientID );
+                    }
+                    else
+                    {
+                        EE_LOG_MESSAGE( LogCategory::Network, "Websocket Server", "Client Closed Connection: %s", msg->closeInfo.reason.c_str() );
+                    }
                     DisconnectClient( clientID );
                 }
                 break;
