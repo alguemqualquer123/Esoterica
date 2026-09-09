@@ -10,9 +10,13 @@
 
 #include <immintrin.h>
 
-#ifdef _WIN32
-// TODO: Get rid of this
+#if EE_PLATFORM_WINDOWS
 #include <windows.h>
+#elif EE_PLATFORM_LINUX
+#include <sys/mman.h>
+#include <unistd.h>
+#include <errno.h>
+#include <stdlib.h>
 #endif
 
 //-------------------------------------------------------------------------
@@ -231,15 +235,27 @@ namespace EE
         void* VirtualMemoryReserve( size_t size )
         {
             EE_ASSERT( size );
+            #if EE_PLATFORM_WINDOWS
             return VirtualAlloc( 0, size, MEM_RESERVE, PAGE_READWRITE );
+            #elif EE_PLATFORM_LINUX
+            void* p = mmap( nullptr, size, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0 );
+            return ( p == MAP_FAILED ) ? nullptr : p;
+            #endif
         }
 
         void VirtualMemoryCommit( void* pStart, size_t size )
         {
             EE_ASSERT( pStart );
             EE_ASSERT( size );
+            #if EE_PLATFORM_WINDOWS
             VirtualAlloc( pStart, size, MEM_COMMIT, PAGE_READWRITE );
             InterlockedAdd64( &s_totalVirtualMemoryCommitted, size );
+            #elif EE_PLATFORM_LINUX
+            int res = mprotect( pStart, size, PROT_READ | PROT_WRITE );
+            EE_ASSERT( res == 0 );
+            (void) res;
+            __atomic_add_fetch( &s_totalVirtualMemoryCommitted, (int64_t) size, __ATOMIC_SEQ_CST );
+            #endif
         }
 
         void VirtualMemoryFree( void* pMemory, size_t reservedSize, size_t committedSize )
@@ -247,8 +263,13 @@ namespace EE
             EE_ASSERT( pMemory );
             EE_ASSERT( reservedSize );
             EE_ASSERT( committedSize );
+            #if EE_PLATFORM_WINDOWS
             VirtualFree( pMemory, 0, MEM_RELEASE );
             InterlockedAdd64( &s_totalVirtualMemoryCommitted, -int64_t( committedSize ) );
+            #else
+            munmap( pMemory, reservedSize );
+            __atomic_add_fetch( &s_totalVirtualMemoryCommitted, -int64_t( committedSize ), __ATOMIC_SEQ_CST );
+            #endif
         }
 
         //-------------------------------------------------------------------------

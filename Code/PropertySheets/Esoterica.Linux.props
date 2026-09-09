@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Linux platform property sheet — used when building via CMake on Linux or future Linux MSBuild -->
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <!-- On Linux, External dependencies are expected to be provided via system packages or vcpkg -->
+    <EE_VULKAN_SDK Condition="'$(VULKAN_SDK)'==''">/usr</EE_VULKAN_SDK>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <!-- Additional include for Vulkan headers (from Vulkan SDK or system) -->
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>EE_PLATFORM_LINUX=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <!-- Core Linux system libs — Vulkan replaces D3D12/dxgi -->
+      <AdditionalDependencies>pthread;dl;m;vulkan;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(VULKAN_SDK)/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- No DLL copy step on Linux — .so handling is done by CMake or ldconfig -->
+</Project>

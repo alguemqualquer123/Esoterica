@@ -6,6 +6,9 @@ Copyright (c) 2024-2026 Bobby Anguelov and Kirill Bazhenov
 
 Additional contributions by: Nikita Krupitskas
 
+Fork & Linux port (2026) by: alguemqualquer123 (SR VINIX) — https://github.com/alguemqualquer123
+  - Vulkan RHI (RHI_Vulkan.cpp), SDL3 windowing, POSIX platform layers, CMake Linux presets
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights

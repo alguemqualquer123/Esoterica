@@ -44,16 +44,46 @@ using nullptr_t = decltype( nullptr );
 // Platform
 //-------------------------------------------------------------------------
 
+// Platform detection — prefer CMake-defined EE_PLATFORM_* if available, else auto-detect
+#if !defined(EE_PLATFORM_WINDOWS) && !defined(EE_PLATFORM_LINUX)
+    #if defined(_WIN32) || defined(_WIN64)
+        #define EE_PLATFORM_WINDOWS 1
+    #elif defined(__linux__)
+        #define EE_PLATFORM_LINUX 1
+    #endif
+#endif
+
+#if !defined(EE_PLATFORM_WINDOWS)
+    #define EE_PLATFORM_WINDOWS 0
+#endif
+#if !defined(EE_PLATFORM_LINUX)
+    #define EE_PLATFORM_LINUX 0
+#endif
+
+#if EE_PLATFORM_WINDOWS && EE_PLATFORM_LINUX
+    #error "Both EE_PLATFORM_WINDOWS and EE_PLATFORM_LINUX defined — check build config"
+#endif
+#if !EE_PLATFORM_WINDOWS && !EE_PLATFORM_LINUX
+    #error "No platform defined — expected EE_PLATFORM_WINDOWS or EE_PLATFORM_LINUX"
+#endif
+
 namespace EE::Platform
 {
     enum class Target
     {
         PC = 0,
     };
+
+    // Compile-time helpers
+    static constexpr bool IsWindows() { return EE_PLATFORM_WINDOWS != 0; }
+    static constexpr bool IsLinux() { return EE_PLATFORM_LINUX != 0; }
 }
 
-#if _WIN32
-#include "Platform/Platform_Win32.h"
+#if defined(_WIN32) || EE_PLATFORM_WINDOWS
+    #include "Platform/Platform_Win32.h"
+#endif
+#if defined(__linux__) || EE_PLATFORM_LINUX
+    #include "Platform/Platform_Linux.h"
 #endif
 
 //-------------------------------------------------------------------------

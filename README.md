@@ -1,4 +1,7 @@
-# Esoterica Prototype Game Engine
+# Esoterica Prototype Game Engine — Fork por **alguemqualquer123** (SR VINIX)
+
+> **Fork mantido por [alguemqualquer123](https://github.com/alguemqualquer123) — SR VINIX** | Original por [Bobby Anguelov](https://github.com/BobbyAnguelov/Esoterica)
+> Esta fork adiciona **suporte completo a Linux (Vulkan + SDL3)** mantendo compatibilidade total com Windows (D3D12). Veja [`Docs/BUILD_LINUX.md`](Docs/BUILD_LINUX.md) e `BuildLinux.sh`.
 
 ![Esoterica Logo](Docs/img/EE_Logo.png)
 
@@ -27,6 +30,10 @@ The import pipeline is currently a bit rough from a front-end experience, this i
 As Esoterica is constantly being iterated and worked upon, it becomes hard to provide any documentation that isnt immediately out of date. Additionally, it becomes even less relevant for people forking it to build their own engine with. The code itself is heavily commented and written to be as readable as possible, this is how we intended to provide documentation moving forward.
 
 We do have highlevel docs for the renderer here: <https://docs.esotericaengine.com>
+
+## Linux Support
+
+Esoterica now builds on Linux x64 (Ubuntu 22.04+) with Vulkan backend. See `Docs/BUILD_LINUX.md` and `BuildLinux.sh` for instructions. Windows (D3D12) remains the primary platform; Linux uses `EE_PLATFORM_LINUX` (`Code/Base/Esoterica.h:46`), SDL3 for windowing, and `RHI_Vulkan.cpp` instead of `RHI_Direct3D12.cpp`.
 
 And we have several presentations that cover the high level decisions regarding the entity model and the animation systems here: <https://www.esotericaengine.com/docs>
 

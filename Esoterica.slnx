@@ -75,6 +75,7 @@
   </Folder>
   <Folder Name="/5. Property Sheets/Platforms/">
     <File Path="Code/PropertySheets/Esoterica.Win32.props" />
+    <File Path="Code/PropertySheets/Esoterica.Linux.props" />
   </Folder>
   <Folder Name="/6. Misc/">
     <File Path="Code/.clang-format" />

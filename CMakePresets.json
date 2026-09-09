@@ -1,0 +1,190 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "vs2022-debug",
+            "displayName": "Visual Studio 2022 - Debug (x64) -> Build/x64_Debug/Windows",
+            "description": "Matches the MSBuild Debug|x64 configuration (EE_DEBUG, dev tools on, static modules). Outputs to Build/x64_Debug/Windows.",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/vs2022-debug",
+            "cacheVariables": {
+                "EE_OUTPUT_DIR": "${sourceDir}/Build/x64_Debug/Windows"
+            }
+        },
+        {
+            "name": "vs2022-release",
+            "displayName": "Visual Studio 2022 - Release (x64) -> Build/x64_Release/Windows",
+            "description": "Matches the MSBuild Release|x64 configuration (EE_RELEASE, dev tools on, static modules). Outputs to Build/x64_Release/Windows.",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/vs2022-release",
+            "cacheVariables": {
+                "EE_OUTPUT_DIR": "${sourceDir}/Build/x64_Release/Windows"
+            }
+        },
+        {
+            "name": "vs2022-shipping",
+            "displayName": "Visual Studio 2022 - Shipping (x64) -> Build/x64_Shipping/Windows",
+            "description": "Matches the MSBuild Shipping|x64 configuration (EE_SHIPPING, dev tools off, static modules, LTCG). Outputs to Build/x64_Shipping/Windows.",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/vs2022-shipping",
+            "cacheVariables": {
+                "EE_ENABLE_DEV_TOOLS": "OFF",
+                "EE_OUTPUT_DIR": "${sourceDir}/Build/x64_Shipping/Windows"
+            }
+        },
+        {
+            "name": "ninja-debug",
+            "displayName": "Ninja - Debug (x64)",
+            "description": "Fast incremental Debug build with the Ninja generator.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/ninja-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "ninja-release",
+            "displayName": "Ninja - Release (x64)",
+            "description": "Optimized Release build with the Ninja generator.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/ninja-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "ninja-shipping",
+            "displayName": "Ninja - Shipping (x64)",
+            "description": "Shipping build with the Ninja generator: EE_SHIPPING, dev tools off, LTCG.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/ninja-shipping",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Shipping",
+                "EE_ENABLE_DEV_TOOLS": "OFF"
+            }
+        },
+        {
+            "name": "vs2022-clangcl-debug",
+            "displayName": "Visual Studio 2022 - clang-cl - Debug (x64)",
+            "description": "clang-cl toolset build (MSVC-compatible), Debug configuration.",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "toolset": "ClangCL",
+            "binaryDir": "${sourceDir}/build/vs2022-clangcl-debug"
+        },
+        {
+            "name": "linux-debug",
+            "displayName": "Linux - Debug (x64, Clang/GCC) -> Build/x64_Debug/Linux",
+            "description": "Linux Debug with Vulkan backend (EE_DEBUG, dev tools on). Requires: clang/gcc, ninja, vulkan SDK, SDL3. Outputs to Build/x64_Debug/Linux.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/linux-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "EE_OUTPUT_DIR": "${sourceDir}/Build/x64_Debug/Linux"
+            }
+        },
+        {
+            "name": "linux-release",
+            "displayName": "Linux - Release (x64, Clang/GCC) -> Build/x64_Release/Linux",
+            "description": "Linux Release with Vulkan backend (EE_RELEASE, dev tools on). Outputs to Build/x64_Release/Linux.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/linux-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "EE_OUTPUT_DIR": "${sourceDir}/Build/x64_Release/Linux"
+            }
+        },
+        {
+            "name": "linux-shipping",
+            "displayName": "Linux - Shipping (x64, Clang/GCC) -> Build/x64_Shipping/Linux",
+            "description": "Linux Shipping with Vulkan backend (EE_SHIPPING, dev tools off, LTO). Outputs to Build/x64_Shipping/Linux.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/linux-shipping",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Shipping",
+                "EE_ENABLE_DEV_TOOLS": "OFF",
+                "EE_OUTPUT_DIR": "${sourceDir}/Build/x64_Shipping/Linux"
+            }
+        },
+        {
+            "name": "linux-debug-wsl",
+            "displayName": "Linux WSL - Debug (cross from Windows)",
+            "description": "Cross-compile Linux Debug via WSL/Docker from Windows host. Same output as linux-debug but no host check.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/linux-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "EE_OUTPUT_DIR": "${sourceDir}/Build/x64_Debug/Linux"
+            }
+        },
+        {
+            "name": "linux-release-wsl",
+            "displayName": "Linux WSL - Release (cross from Windows)",
+            "description": "Cross-compile Linux Release via WSL/Docker from Windows host.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/linux-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "EE_OUTPUT_DIR": "${sourceDir}/Build/x64_Release/Linux"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "vs2022-debug",
+            "configurePreset": "vs2022-debug"
+        },
+        {
+            "name": "vs2022-release",
+            "configurePreset": "vs2022-release"
+        },
+        {
+            "name": "vs2022-shipping",
+            "configurePreset": "vs2022-shipping"
+        },
+        {
+            "name": "ninja-debug",
+            "configurePreset": "ninja-debug"
+        },
+        {
+            "name": "ninja-release",
+            "configurePreset": "ninja-release"
+        },
+        {
+            "name": "ninja-shipping",
+            "configurePreset": "ninja-shipping"
+        },
+        {
+            "name": "vs2022-clangcl-debug",
+            "configurePreset": "vs2022-clangcl-debug"
+        },
+        {
+            "name": "linux-debug",
+            "configurePreset": "linux-debug"
+        },
+        {
+            "name": "linux-release",
+            "configurePreset": "linux-release"
+        },
+        {
+            "name": "linux-shipping",
+            "configurePreset": "linux-shipping"
+        },
+        {
+            "name": "linux-debug-wsl",
+            "configurePreset": "linux-debug-wsl"
+        },
+        {
+            "name": "linux-release-wsl",
+            "configurePreset": "linux-release-wsl"
+        }
+    ]
+}

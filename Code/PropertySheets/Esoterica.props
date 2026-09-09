@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
-    <Import Project="$(SolutionDir)Code\PropertySheets\Esoterica.Win32.props" />
+    <!-- Platform-specific props: MSBuild only runs on Windows, but keep conditional for CMake-generated projects and future Linux MSBuild -->
+    <Import Project="$(SolutionDir)Code\PropertySheets\Esoterica.Win32.props" Condition="'$(OS)'=='Windows_NT'" />
+    <Import Project="$(SolutionDir)Code\PropertySheets\Esoterica.Linux.props" Condition="'$(OS)'!='Windows_NT'" />
     <Import Project="$(SolutionDir)Code\PropertySheets\EA.props" />
     <Import Project="$(SolutionDir)Code\PropertySheets\Imgui.props" />
     <Import Project="$(SolutionDir)Code\PropertySheets\SuperLuminal.props" />
@@ -28,7 +30,8 @@
       <AdditionalOptions>/bigobj /Zo /Zc:inline %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>$(ProjectName.ToUpper().Replace('.', '_'));_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="$(Platform) == 'x64'">NDEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="$(Platform) == 'x64' and '$(OS)'=='Windows_NT'">NDEBUG;NOMINMAX;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="$(Platform) == 'x64' and '$(OS)'!='Windows_NT'">NDEBUG;EE_PLATFORM_LINUX=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="$(Configuration) == 'Debug'">EE_DEBUG=1;EE_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="$(Configuration) == 'Release'">EE_RELEASE=1;EE_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="$(Configuration) == 'Shipping'">EE_SHIPPING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -66,7 +69,7 @@
       <EnableCOMDATFolding Condition="$(Configuration) == 'Shipping'">true</EnableCOMDATFolding>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </Link>
-    <PreBuildEvent>
+    <PreBuildEvent Condition="'$(OS)'=='Windows_NT'">
       <Command>$(SolutionDir)KillEsotericaProcesses.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

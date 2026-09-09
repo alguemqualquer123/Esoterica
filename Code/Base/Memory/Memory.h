@@ -5,7 +5,6 @@
 #include "Base/Utils/GlobalRegistryBase.h"
 #include "EASTL/atomic.h"
 #include <cstring>
-#include <malloc.h>
 #include <utility>
 
 //-------------------------------------------------------------------------
@@ -15,16 +14,17 @@
 
 //-------------------------------------------------------------------------
 
-#ifdef _WIN32
-
-#define EE_STACK_ALLOC( x ) alloca( x )
-#define EE_STACK_ARRAY_ALLOC( type, numElements ) reinterpret_cast<type*>( alloca( sizeof( type ) * numElements ) );
-
+#if EE_PLATFORM_WINDOWS
+    #include <malloc.h>
+    #define EE_STACK_ALLOC( x ) alloca( x )
+    #define EE_STACK_ARRAY_ALLOC( type, numElements ) reinterpret_cast<type*>( alloca( sizeof( type ) * numElements ) );
+#elif EE_PLATFORM_LINUX
+    #include <alloca.h>
+    #define EE_STACK_ALLOC( x ) alloca( x )
+    #define EE_STACK_ARRAY_ALLOC( type, numElements ) reinterpret_cast<type*>( alloca( sizeof( type ) * numElements ) );
 #else
-
-#define EE_STACK_ALLOC( x )
-#define EE_STACK_ARRAY_ALLOC( type, numElements )
-
+    #define EE_STACK_ALLOC( x ) alloca( x )
+    #define EE_STACK_ARRAY_ALLOC( type, numElements ) reinterpret_cast<type*>( alloca( sizeof( type ) * numElements ) );
 #endif
 
 //-------------------------------------------------------------------------
